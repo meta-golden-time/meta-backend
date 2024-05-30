@@ -4,6 +4,7 @@ const tokenUtil = require('../lib/tokenUtil');
 
 const userService = {
   async reg(params) {
+    console.log("service/reg",params)
     let inserted = null;
     let hashPassword = null;
     try {
