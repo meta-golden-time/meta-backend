@@ -15,8 +15,8 @@ router.post('/', async (req, res, next) => {
       password: req.body.password,
       email: req.body.email,
       phone: req.body.phone,
-      //addrLat: req.query.addrLat,
-      //addrLng: req.query.addrLng,
+      addrLat: req.body.addrLat,
+      addrLng: req.body.addrLng,
     };
     console.log("🚀 ~ router.post ~ params:", params)
    
@@ -35,15 +35,15 @@ router.post('/', async (req, res, next) => {
       res.status(500).json({ err: err.toString() });
     }
 
-    if (!params.addrLat) {
-      const err = new Error('Not allowed null (address Lat)');
-      res.status(500).json({ err: err.toFolat() });
-    }
+    // if (!params.addrLat) {
+    //   const err = new Error('Not allowed null (address Lat)');
+    //   res.status(500).json({ err: err.toFolat() });
+    // }
 
-    if (!params.addrLng) {
-      const err = new Error('Not allowed null (address Lng)');
-      res.status(500).json({ err: err.toFolat() });
-    }
+    // if (!params.addrLng) {
+    //   const err = new Error('Not allowed null (address Lng)');
+    //   res.status(500).json({ err: err.toFolat() });
+    // }
 
 
     const result = await userService.reg(params);
@@ -97,7 +97,6 @@ router.put('/:id', isLoggedIn, async (req, res) => {
   try {
     const params = {
       id: req.params.id,
-      departmentId: req.body.departmentId,
       name: req.body.name,
       email: req.body.email,
       phone: req.body.phone,
