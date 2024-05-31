@@ -5,7 +5,11 @@ var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 
 var indexRouter = require('./routes/index');
+
+const models = require('./models/index');
+
 var usersRouter = require('./routes/users');
+
 
 const models = require('./models/index');
 
@@ -23,6 +27,21 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
+
+
+models.sequelize.authenticate().then(() => {
+  console.log('DB connection Success');
+
+  models.sequelize.sync().then(() => {
+    console.log('Sequelize sync Success!!!!!!');
+  }).catch((error) => {
+    console.log(error);
+  });
+}).catch((error) => {
+  console.log(error);
+});
+
+
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
