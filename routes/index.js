@@ -3,7 +3,15 @@ var router = express.Router();
 var usersRouter = require('./users');
 var weathersRouter = require('./weather');
 
+<<<<<<< Updated upstream
 
+=======
+const userRouter = require('./user');
+const loginRouter = require('./auth');
+
+router.use('/users', userRouter);
+router.use('/auth', loginRouter);
+>>>>>>> Stashed changes
 
 router.use('/users', usersRouter);
 router.use('/weather', weathersRouter);
