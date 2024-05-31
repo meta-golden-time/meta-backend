@@ -5,6 +5,7 @@ var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 
 var indexRouter = require('./routes/index');
+const models = require('./models/index');
 
 
 var app = express();
@@ -20,6 +21,21 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', indexRouter);
+
+
+
+models.sequelize.authenticate().then(() => {
+  console.log('DB connection Success');
+
+  models.sequelize.sync().then(() => {
+    console.log('Sequelize sync Success!!!!!!');
+  }).catch((error) => {
+    console.log(error);
+  });
+}).catch((error) => {
+  console.log(error);
+});
+
 
 
 // catch 404 and forward to error handler
