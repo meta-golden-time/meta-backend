@@ -11,8 +11,6 @@ const models = require('./models/index');
 var usersRouter = require('./routes/users');
 
 
-const models = require('./models/index');
-
 var app = express();
 
 // view engine setup

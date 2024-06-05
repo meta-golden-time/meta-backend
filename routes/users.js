@@ -2,10 +2,11 @@ const express = require('express');
 
 const router = express.Router();
 const userService = require('../service/userService');
-const { isLoggedIn } = require('../lib/middleware');
+//const { isLoggedIn } = require('../lib/middleware');
 
 // 사용자 정보 입력
-router.post('/', isLoggedIn, async (req, res, next) => {
+router.post('/', /*isLoggedIn,*/ async (req, res, next) => {
+  
   try {
     const params = {
       name: req.body.name,
@@ -13,9 +14,10 @@ router.post('/', isLoggedIn, async (req, res, next) => {
       password: req.body.password,
       email: req.body.email,
       phone: req.body.phone,
-      addrLat: req.query.addrLat,
-      addrLng: req.query.addrLng,
+      addrLat: req.body.addrLat,
+      addrLng: req.body.addrLng,
     };
+    console.log("🚀 ~ router.post ~ params:", params)
    
     if (!params.name) {
       const err = new Error('Not allowed null (name)');
@@ -52,7 +54,7 @@ router.post('/', isLoggedIn, async (req, res, next) => {
 });
 
 // 리스트 조회
-router.get('/', isLoggedIn, async (req, res) => {
+router.get('/', /*isLoggedIn,*/ async (req, res) => {
   try {
     const params = {
       ids: req.query.ids ? req.query.ids.split(',') : null,
@@ -74,7 +76,7 @@ router.get('/', isLoggedIn, async (req, res) => {
 });
 
 // 상세정보 조회
-router.get('/:id', isLoggedIn, async (req, res) => {
+router.get('/:id', /*isLoggedIn,*/ async (req, res) => {
   try {
     const params = {
       id: req.params.id,
@@ -90,7 +92,7 @@ router.get('/:id', isLoggedIn, async (req, res) => {
 });
 
 // 수정
-router.put('/:id', isLoggedIn, async (req, res) => {
+router.put('/:id', /*isLoggedIn,*/ async (req, res) => {
   try {
     const params = {
       id: req.params.id,
@@ -110,7 +112,7 @@ router.put('/:id', isLoggedIn, async (req, res) => {
 });
 
 // 삭제
-router.delete('/:id', isLoggedIn, async (req, res) => {
+router.delete('/:id', /*isLoggedIn,*/ async (req, res) => {
   try {
     const params = {
       id: req.params.id,
@@ -125,7 +127,7 @@ router.delete('/:id', isLoggedIn, async (req, res) => {
   }
 });
 // 삭제
-router.delete('/force/:id', isLoggedIn, async (req, res) => {
+router.delete('/force/:id', /*isLoggedIn,*/ async (req, res) => {
   try {
     const params = {
       id: req.params.id,
