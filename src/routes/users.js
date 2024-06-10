@@ -4,53 +4,83 @@ const router = express.Router();
 const userService = require('../service/userService');
 //const { isLoggedIn } = require('../lib/middleware');
 
-// 사용자 정보 입력
-router.post('/', /*isLoggedIn,*/ async (req, res, next) => {
+// 회원가입
+router.post('/register', /*isLoggedIn,*/ async (req, res, next) => {
+  const params = {
+    name: req.body.name,
+    userID: req.body.userID,
+    password: req.body.password,
+    email: req.body.email,
+    phone: req.body.phone,
+    addrLat: req.body.addrLat,
+    addrLng: req.body.addrLng,
+  };
+
+  const recaptchaToken = req.body.recaptcha;
+  const SECRET_KEY = '6Ld9Y_UpAAAAAFQzCy2q4mus-I8tWu9xyUOMnidN';
   
-  try {
-    const params = {
-      name: req.body.name,
-      userID: req.body.userID,
-      password: req.body.password,
-      email: req.body.email,
-      phone: req.body.phone,
-      addrLat: req.body.addrLat,
-      addrLng: req.body.addrLng,
-    };
-    console.log("🚀 ~ router.post ~ params:", params)
-   
-    if (!params.name) {
-      const err = new Error('Not allowed null (name)');
-      res.status(500).json({ err: err.toString() });
-    }
-
-    if (!params.userID) {
-      const err = new Error('Not allowed null (userID)');
-      res.status(500).json({ err: err.toString() });
-    }
-
-    if (!params.password) {
-      const err = new Error('Not allowed null (password)');
-      res.status(500).json({ err: err.toString() });
-    }
-
-    if (!params.addrLat) {
-      const err = new Error('Not allowed null (address Lat)');
-      res.status(500).json({ err: err.toFolat() });
-    }
-
-    if (!params.addrLng) {
-      const err = new Error('Not allowed null (address Lng)');
-      res.status(500).json({ err: err.toFolat() });
-    }
-
-
-    const result = await userService.reg(params);
-
-    res.status(200).json(result);
-  } catch (err) {
-    res.status(500).json({ err: err.toString() });
+  if(!recaptchaToken) {
+    return res.status(400).send({ success: false, message: 'reCAPTCHA token missing.' });
   }
+
+  const googleVerifyURL = `https://www.google.com/recaptcha/api/siteverify?secret=${SECRET_KEY}&response=${recaptchaToken}`;
+
+  const response = await fetch(googleVerifyURL, {
+    method: 'POST',
+  });
+  const json = await response.json();
+  console.log("🚀 ~ router.post ~ json:", json)
+
+  if (json.success) { // Success
+
+
+    //////회원가입 목록 넣기 
+    try {
+    
+      console.log("🚀 ~ router.post ~ params:", params)
+     
+      if (!params.name) {
+        const err = new Error('Not allowed null (name)');
+        res.status(500).json({ err: err.toString() });
+      }
+  
+      if (!params.userID) {
+        const err = new Error('Not allowed null (userID)');
+        res.status(500).json({ err: err.toString() });
+      }
+  
+      if (!params.password) {
+        const err = new Error('Not allowed null (password)');
+        res.status(500).json({ err: err.toString() });
+      }
+  
+      if (!params.addrLat) {
+        const err = new Error('Not allowed null (address Lat)');
+        res.status(500).json({ err: err.toFolat() });
+      }
+  
+      if (!params.addrLng) {
+        const err = new Error('Not allowed null (address Lng)');
+        res.status(500).json({ err: err.toFolat() });
+      }
+  
+  
+      const result = await userService.reg(params);
+  
+      //res.status(200).json(result);
+    } catch (err) {
+      res.status(500).json({ err: err.toString() });
+    }
+    /////
+
+
+    res.send({ success: true });
+  } else {  // Failed
+    res.status(400).send({ success: false, message: 'reCAPTCHA verification failed.' });
+  }
+
+  
+  
 });
 
 // 리스트 조회

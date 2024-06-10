@@ -6,10 +6,12 @@ const loginRouter = require('./auth');
 const weatherRouter = require('./weather');
 const mapsRouter = require('./maps');
 
+
 router.use('/users', userRouter);
 router.use('/auth', loginRouter);
 router.use('/weather', weatherRouter);
 router.use('/map', mapsRouter);
+
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
