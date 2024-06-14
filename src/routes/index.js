@@ -5,12 +5,18 @@ const userRouter = require('./users');
 const loginRouter = require('./auth');
 const weatherRouter = require('./weather');
 const mapsRouter = require('./maps');
+const booksRouter = require('./bookmark');
+const naverNewsRouter = require('./naverNews');
+const boardRouter = require('./boardRouter');
 
 
 router.use('/users', userRouter);
 router.use('/auth', loginRouter);
 router.use('/weather', weatherRouter);
 router.use('/map', mapsRouter);
+router.use('/bookmark', booksRouter);
+router.use('/news', naverNewsRouter);
+router.use('/board', boardRouter);
 
 
 /* GET home page. */

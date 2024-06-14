@@ -12,18 +12,20 @@ router.post('/register', /*isLoggedIn,*/ async (req, res, next) => {
     password: req.body.password,
     email: req.body.email,
     phone: req.body.phone,
-    addrLat: req.body.addrLat,
-    addrLng: req.body.addrLng,
+    role:  req.body.role,
+    // addrLat: req.body.addrLat,
+    // addrLng: req.body.addrLng,
+    addrLat: 12,
+    addrLng: 9,
   };
 
   const recaptchaToken = req.body.recaptcha;
-  const SECRET_KEY = '6Ld9Y_UpAAAAAFQzCy2q4mus-I8tWu9xyUOMnidN';
   
   if(!recaptchaToken) {
     return res.status(400).send({ success: false, message: 'reCAPTCHA token missing.' });
   }
 
-  const googleVerifyURL = `https://www.google.com/recaptcha/api/siteverify?secret=${SECRET_KEY}&response=${recaptchaToken}`;
+  const googleVerifyURL = `https://www.google.com/recaptcha/api/siteverify?secret=${process.env.RECAPTCHA_SECRET_KEY}&response=${recaptchaToken}`;
 
   const response = await fetch(googleVerifyURL, {
     method: 'POST',
@@ -32,6 +34,7 @@ router.post('/register', /*isLoggedIn,*/ async (req, res, next) => {
   console.log("🚀 ~ router.post ~ json:", json)
 
   if (json.success) { // Success
+  //if (true) { // Success
 
 
     //////회원가입 목록 넣기 
@@ -66,15 +69,15 @@ router.post('/register', /*isLoggedIn,*/ async (req, res, next) => {
   
   
       const result = await userService.reg(params);
-  
-      //res.status(200).json(result);
+      res.status(200).send({ success: true });
+     //res.status(200).json(result);
     } catch (err) {
       res.status(500).json({ err: err.toString() });
     }
     /////
 
 
-    res.send({ success: true });
+    //res.send({ success: true });
   } else {  // Failed
     res.status(400).send({ success: false, message: 'reCAPTCHA verification failed.' });
   }
