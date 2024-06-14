@@ -1,6 +1,8 @@
 const { sequelize } = require('./connection');
 
 const User = require('./user');
+const BookMark = require('./bookMark');
+const Board = require('./board');
 
 const db = {};
 
@@ -8,6 +10,8 @@ db.sequelize = sequelize;
 
 // models 에서 설정한 DB 코드 파일 연결
 db.User = User;
+db.BookMark = BookMark;
+db.Board = Board;
 
 
 Object.keys(db).forEach((modelName) => {

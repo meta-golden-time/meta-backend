@@ -1,33 +1,37 @@
 const express = require('express');
-
 const router = express.Router();
 const userService = require('../service/userService');
 
-// 로그인
-router.post('/', async (req, res, next) => {
+router.post('/login', async (req, res, next) => {
   try {
-    console.log('auth/login/post', req.body);
+    console.log("🚀 ~ router.post ~ req.body:", req.body)
+    const { userID, password } = req.body;
 
-    const params = {
-      userID: req.body.userID,
-      password: req.body.password,
-    };
-
-    if (!params.userID) {
-      const err = new Error('Not allowed null (userID)');
-      res.status(500).json({ err: err.toString() });
+    if (!userID || !password) {
+      return res.status(400).json({ error: 'Both userID and password are required' });
     }
+ 
+    const user = await userService.login({ userID, password });
 
-    if (!params.password) {
-      const err = new Error('Not allowed null (password)');
-      res.status(500).json({ err: err.toString() });
+    if (user) {
+      req.session.user = { userID, name: user.name, email: user.email, role: user.role };
+      req.session.isLogin = true;
+      res.status(200).json(user);
+    } else {
+      res.status(401).json({ error: 'Invalid credentials' });
     }
-
-    const result = await userService.login(params);
-
-    res.status(200).json(result);
   } catch (err) {
-    res.status(500).json({ err: err.toString() });
+    res.status(500).json({ error: err.message });
+  }
+});
+
+router.post('/logout', async (req, res, next) => {
+  try {
+    req.session.destroy(function(err){
+      res.status(200).send({ success: true });
+    });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
   }
 });
 

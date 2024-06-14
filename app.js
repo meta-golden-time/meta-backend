@@ -5,13 +5,12 @@ var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 const cors = require('cors');
 
-var indexRouter = require('./routes/index');
+var indexRouter = require('./src/routes/index');
 
-const models = require('./models/index');
-
+const models = require('./src/models/index');
 
 const bodyParser = require('body-parser');
-const { sessionMiddleware } = require('./middleware/auth');
+const { sessionMiddleware } = require('./src/middlewares/user/Login');
 
 var app = express();
 
@@ -19,7 +18,10 @@ var app = express();
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
 
-app.use(cors()); // CORS 미들웨어 추가
+app.use(cors({
+  origin: 'http://localhost:5173', // 프론트엔드 서버의 주소로 변경하세요.
+  credentials: true // 세션 쿠키를 주고받기 위해 credentials를 true로 설정
+})); // CORS 미들웨어 추가
 app.use(express.json());
 
 app.use(bodyParser.urlencoded({ extended: false }));
@@ -31,13 +33,12 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use(sessionMiddleware); // 세션 미들웨어 적용
-
 app.use('/', indexRouter);
 
-
+console.log("생성이 되었니??")
 
 models.sequelize.authenticate().then(() => {
-  console.log('DB connection Success');
+  console.log('DB connection Success'); 
 
   models.sequelize.sync().then(() => {
     console.log('Sequelize sync Success!!!!!!');
@@ -48,13 +49,10 @@ models.sequelize.authenticate().then(() => {
   console.log(error);
 });
 
-
-
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
   next(createError(404));
 });
-
 
 // error handler
 app.use(function(err, req, res, next) {
@@ -64,7 +62,12 @@ app.use(function(err, req, res, next) {
 
   // render the error page
   res.status(err.status || 500);
-  res.render('error');
+  
+  // JSON 형식으로 에러를 반환합니다
+  res.json({
+    message: err.message,
+    error: req.app.get('env') === 'development' ? err : {}
+  });
 });
 
 module.exports = app;

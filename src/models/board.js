@@ -1,6 +1,6 @@
 const Sequelize = require('sequelize');
 
-module.exports = class User extends Sequelize.Model {
+module.exports = class Board extends Sequelize.Model {
   static init(sequelize) {
     return super.init({
       id: {
@@ -22,7 +22,7 @@ module.exports = class User extends Sequelize.Model {
         type: Sequelize.STRING(255),
         allowNull: false,
       },
-      email: {
+      title: {
         type: Sequelize.STRING(255),
         allowNull: false,
         unique: true,
@@ -30,20 +30,12 @@ module.exports = class User extends Sequelize.Model {
           isEmail: true
         }
       },
-      phone: {
+      content: {
         type: Sequelize.STRING(255),
         allowNull: false,
       },
       role: {
         type: Sequelize.STRING(255),
-        allowNull: false,
-      },
-      addrLat: { // 사용자 주소의 위도
-        type: Sequelize.FLOAT(20),
-        allowNull: false,
-      },
-      addrLng: { // 사용자 주소의 경도
-        type: Sequelize.FLOAT(20),
         allowNull: false,
       },
     }, {
@@ -56,12 +48,5 @@ module.exports = class User extends Sequelize.Model {
     });
   }
 
-  // static associate(db) {
-  //
-  //   db.User.hasMany(db.Bookmark, { foreignKey: { name: 'userId', onDelete: 'SET NULL', as: 'Bookmarks' } });
-  // }
-
-  // static getIncludeAttributes() {
-  //   return ['id', 'name', 'userID', 'email', 'phone', 'addrLat', 'addrLng', 'createdAt'];
-  // }
+  
 };
