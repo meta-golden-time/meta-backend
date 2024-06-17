@@ -23,24 +23,6 @@ const boardService = {
     });
   },
 
-  async bookAdd(params) {
-    console.log("🚀 ~ reg ~ params:", params)
-    let inserted = null;
-    
-    try {
-      inserted = await bookDao.insert(params);
-      console.log("🚀 ~ bookAdd ~ inserted:", inserted)
-    } catch (err) {
-      return new Promise((resolve, reject) => {
-        reject(err);
-      });
-    }
-
-    return new Promise((resolve, reject) => {
-      resolve(inserted);
-    });
-  },
-
 
   // selectList
   async list(params) {

@@ -1,16 +1,16 @@
 // sequelize와 User 모델 불러오기
 const { Op } = require('sequelize');
-const { Board } = require('../models/index');
+const { User } = require('../models/index');
 
 // userDao 객체를 정의, 이 객체는 데이터베이스에 대한 CRUD 연산을 수행한다.
-const boardDao = {
+const userDao = {
   // 사용자를 삽입하는 함수
   insert(params) {
     console.log("🚀 ~ insert ~ params:", params)
     // Promise 객체를 반환합니다. 비동기 처리를 위해 사용됩니다.
     return new Promise((resolve, reject) => {
       // User 모델을 사용하여 새 사용자를 생성합니다. params는 새 사용자 정보를 담고 있습니다.
-      Board.create(params).then((inserted) => {
+      User.create(params).then((inserted) => {
         console.log("🚀 ~ User.create ~ inserted:", inserted)
         // console.log(JSON.parse(JSON.stringify(inserted))); // 불필요한 정보를 제외해서 보여준다.
         // 삽입된 사용자 정보에서 비밀번호를 제외하고 나머지 정보만을 추출합니다.
@@ -91,7 +91,7 @@ const boardDao = {
     return new Promise((resolve, reject) => {
       // User 모델을 사용하여 조건에 맞는 사용자 목록과 총 개수를 조회합니다.
       // 비밀번호를 제외한 모든 속성과 관련 Department 정보를 포함합니다.
-      Board.findAndCountAll({
+      User.findAndCountAll({
         ...setQuery,
         attributes: { exclude: ['password'] }, // 비밀번호는 제외
       }).then((selectedList) => {
@@ -105,15 +105,18 @@ const boardDao = {
   },
   // 로그인용 유저 정보 조회
   selectUser(params) {
+   
     return new Promise((resolve, reject) => {
-      Board.findOne({
+      User.findOne({
 
         //attributes: ['id', 'user_i_d', 'password', 'name'],
         where: [{ user_i_d: params.userID }],
 
       }).then((selectedInfo) => {
+       
         resolve(selectedInfo);
       }).catch((err) => {
+      
         reject(err);
       });
     });
@@ -121,7 +124,7 @@ const boardDao = {
   // 수정
   update(params) {
     return new Promise((resolve, reject) => {
-      Board.update(
+      User.update(
         params,
         {
           where: { id: params.id },
@@ -137,7 +140,7 @@ const boardDao = {
   delete(params) {
 
     return new Promise((resolve, reject) => {
-      Board.destroy({
+      User.destroy({
         where: { id: params.id },
       }).then((deleted) => {
         resolve({ deletedCount: deleted });
@@ -148,7 +151,7 @@ const boardDao = {
   },
   deleteForce(params) {
     return new Promise((resolve, reject) => {
-      Board.destroy({
+      User.destroy({
         where: { id: params.id },
         force: true,
       }).then((deleted) => {
@@ -160,4 +163,4 @@ const boardDao = {
   },
 };
 
-module.exports = boardDao;
+module.exports = userDao;
