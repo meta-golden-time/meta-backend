@@ -14,6 +14,7 @@ const { sessionMiddleware } = require('./src/middlewares/user/Login');
 
 var app = express();
 
+
 dotenv.config();
 
 // CORS 설정
@@ -21,6 +22,7 @@ const corsOptions = {
   origin: 'http://localhost:5173', // 요청을 허용할 출처
   credentials: true, // 자격 증명을 허용
 };
+
 
 app.use(cors(corsOptions)); // CORS 미들웨어 적용
 

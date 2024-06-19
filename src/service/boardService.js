@@ -21,6 +21,7 @@ const boardService = {
     });
   },
 
+
   async allFind() {
     console.log("🚀 ~ reg ~ allFindparams:")
     let inserted = null;    
@@ -70,6 +71,7 @@ const boardService = {
       resolve(inserted);
     });
   },
+
 
 
   // selectList

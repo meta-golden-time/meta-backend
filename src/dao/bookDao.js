@@ -4,6 +4,22 @@ const { BookMark } = require('../models/index');
 
 // userDao 객체를 정의, 이 객체는 데이터베이스에 대한 CRUD 연산을 수행한다.
 const bookDao = {
+
+  async findExistingBookmark(params) {
+    return BookMark.findOne({
+      where: {
+        userID: params.userID,
+        location_S: params.location_S,
+        lat_S: params.lat_S,
+        lag_S: params.lag_S,
+        location_E: params.location_E,
+        lat_E: params.lat_E,
+        lag_E: params.lag_E
+      }
+    });
+  },
+
+  
   // 사용자를 삽입하는 함수
   insert(params) {
     console.log("🚀 ~ insert ~ params:", params)
@@ -15,7 +31,23 @@ const bookDao = {
         // console.log(JSON.parse(JSON.stringify(inserted))); // 불필요한 정보를 제외해서 보여준다.
         resolve(inserted);
       }).catch((err) => {
+        console.log("🚀 ~ BookMark.create ~ err:", err)
+     
         // 처리 중 에러가 발생하면 에러를 반환합니다.
+        reject(err);
+      });
+    });
+  },
+
+  ///즐겨찾기 검색
+  searchDao(params) {
+    return new Promise((resolve, reject) => {
+      BookMark.findAll({
+        where: [{ user_i_d: params.userID }],
+      }).then((selectedInfo) => {       
+        resolve(selectedInfo);
+      }).catch((err) => {
+      
         reject(err);
       });
     });

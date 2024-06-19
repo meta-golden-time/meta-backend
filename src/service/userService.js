@@ -22,24 +22,6 @@ const userService = {
     });
   },
 
-  async bookAdd(params) {
-    console.log("🚀 ~ reg ~ params:", params)
-    let inserted = null;
-    
-    try {
-      inserted = await userDao.insert(params);
-      console.log("🚀 ~ bookAdd ~ inserted:", inserted)
-    } catch (err) {
-      return new Promise((resolve, reject) => {
-        reject(err);
-      });
-    }
-
-    return new Promise((resolve, reject) => {
-      resolve(inserted);
-    });
-  },
-
 
   // selectList
   async list(params) {
@@ -121,12 +103,13 @@ const userService = {
     });
   },
   async login(params) {
+   
     let tokenResult = null;
     let selectedUserInfo = null;
     try {
       // 1. 사용자 조회 (로그인용)
       selectedUserInfo = await userDao.selectUser(params);
-      console.log('selectedUserInfoselectedUserInfo', selectedUserInfo);
+     
       // 1-1. 사용자 조회된게 있는지 확인후 없으면 에러처리 및 함수 종료
       if (!selectedUserInfo) {
         const err = new Error(`userService.login, 일치하는 유저정보가 없습니다 (userID: ${JSON.stringify(params.userID)})`);

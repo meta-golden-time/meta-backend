@@ -6,20 +6,22 @@ const { deleteAllSessions } = require('../middlewares/user/Login');
 router.post('/login', async (req, res, next) => {
   try {
     const { userID, password } = req.body;
+    const body = {
+      userID,
+      password
+    };  
 
     if (!userID || !password) {
       return res.status(400).json({ error: 'Both userID and password are required' });
-    }
-
-    const user = await userService.login({ userID, password });
+    } 
+    const user = await userService.login(body);
 
     if (user) {
       req.session.user = { userID, name: user.name, email: user.email, role: user.role };
       req.session.isLogin = true;
-      console.log("🚀 ~ router.post ~  req.session:",  req.session)
-      res.status(200).json(user);
+      res.status(200).json({ user, success: true });
     } else {
-      res.status(401).json({ error: 'Invalid credentials' });
+      res.status(401).json({ error: 'Invalid credentials' } , false);
     }
   } catch (err) {
     res.status(500).json({ error: err.message });
@@ -35,6 +37,7 @@ router.get('/loginCheck', (req, res) => {
   }
 });
 
+
 router.post('/logout',deleteAllSessions, async (req, res, next) => {
   // try {
   //   req.session.destroy(function(err){
@@ -44,5 +47,6 @@ router.post('/logout',deleteAllSessions, async (req, res, next) => {
   //   res.status(500).json({ error: err.message });
   // }
 });
+
 
 module.exports = router;

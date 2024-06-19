@@ -4,7 +4,8 @@ const boardDao = require('../dao/boardDao');
 const hashUtil = require('../lib/hashUtil');
 const tokenUtil = require('../lib/tokenUtil');
 
-const boardService = {
+
+const bookMarkService = {
   async reg(params) {
     console.log("🚀 ~ reg ~ params:", params)
     let inserted = null;
@@ -28,6 +29,12 @@ const boardService = {
     let inserted = null;
     
     try {
+      const existingBookmark = await bookDao.findExistingBookmark(params);
+      if (existingBookmark) {
+        return new Promise((resolve, reject) => {
+          reject(new Error('이미 존재하는 출발지와 도착지 조합입니다.'));
+        });
+      }
       inserted = await bookDao.insert(params);
       console.log("🚀 ~ bookAdd ~ inserted:", inserted)
     } catch (err) {
@@ -40,6 +47,7 @@ const boardService = {
       resolve(inserted);
     });
   },
+
 
 
   // selectList
@@ -147,6 +155,28 @@ const boardService = {
 
     
   },
+  async search(params) {
+    console.log("🚀 ~ reg ~ params:", params)
+    let bookMark = null;
+    let hashPassword = null;
+    
+    try {
+      bookMark = await bookDao.searchDao(params);
+    } catch (err) {
+      return new Promise((resolve, reject) => {
+        reject(err);
+      });
+    }
+
+    return new Promise((resolve, reject) => {
+      resolve(bookMark);
+    });
+  },
 };
 
-module.exports = boardService;
+module.exports = bookMarkService;
+
+  
+
+
+

@@ -3,9 +3,11 @@ const router = express.Router();
 const boardService = require('../service/boardService');
 const { authMiddleware } = require('../middlewares/user/Login');
 
+
 let posts = [];
 
 // Create a new post
+
 router.post('/insert', authMiddleware, async (req, res, next) => {
   const user = req.session.user;    
   
@@ -19,11 +21,13 @@ router.post('/insert', authMiddleware, async (req, res, next) => {
     title,
     content,
     password: isPrivate ? password : '',
+
     isPrivate,
   };
   const result = await boardService.reg(params);
   console.log("🚀 ~ result:", result)
   res.status(200).send({ success: true, result });
+
 });
 
 // Get all posts

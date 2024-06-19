@@ -105,6 +105,7 @@ const userDao = {
   },
   // 로그인용 유저 정보 조회
   selectUser(params) {
+   
     return new Promise((resolve, reject) => {
       User.findOne({
 
@@ -112,8 +113,10 @@ const userDao = {
         where: [{ user_i_d: params.userID }],
 
       }).then((selectedInfo) => {
+       
         resolve(selectedInfo);
       }).catch((err) => {
+      
         reject(err);
       });
     });
