@@ -14,14 +14,18 @@ const { sessionMiddleware } = require('./src/middlewares/user/Login');
 
 var app = express();
 
+const corsOptions = {
+  //origin: 'http://localhost:5173', // 요청을 허용할 출처
+  //credentials: true, // 자격 증명을 허용
+};
+
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
 
-app.use(cors({
-  origin: 'http://localhost:5173', // 프론트엔드 서버의 주소로 변경하세요.
-  credentials: true // 세션 쿠키를 주고받기 위해 credentials를 true로 설정
-})); // CORS 미들웨어 추가
+
+
+app.use(cors());
 app.use(express.json());
 
 app.use(bodyParser.urlencoded({ extended: false }));

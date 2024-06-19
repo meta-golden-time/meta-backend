@@ -1,24 +1,36 @@
 const express = require('express');
+const router = express.Router();  
 const { v4: uuidv4 } = require('uuid');
+const boardService = require('../service/boardService');
+const { authMiddleware } = require('../middlewares/user/Login');
 
-const router = express.Router();
+
 
 let posts = [];
 
 // Create a new post
-router.post('/insert', (req, res) => {
+router.post('/insert', authMiddleware, async(req, res, next) => {
+  console.log("🚀 ~ board.router.post ~  req.body:",  req.body)
+  const user = req.session.user;    
+  
+  if (!user) {
+    console.log("🚀 ~ router.post ~ user:", user)
+    return res.status(401).json({ err: 'Unauthorized user' });
+  }
   const { title, content, author, password, isPrivate } = req.body;
+
   const newPost = {
-    userID: req.user.id,
+    userID: user.userID,
     title,
     content,
     author,
     password: isPrivate ? password : '',
-    isPrivate,
-    createdAt: new Date().toISOString(),
-    updatedAt: new Date().toISOString()
+    isPrivate
   };
   posts.push(newPost);
+  const result = await boardService.reg(params);
+  console.log("🚀 ~ router.post ~ result:", result)
+  res.status(200).send({ success: true , result});
   res.status(201).json(newPost);
 });
 
