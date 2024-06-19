@@ -18,7 +18,6 @@ router.post('/register', /*isLoggedIn,*/ async (req, res, next) => {
     addrLat: 12,
     addrLng: 9,
   };
-  console.log("🚀 ~ params:", params)
 
   const recaptchaToken = req.body.recaptcha;
   
@@ -60,12 +59,12 @@ router.post('/register', /*isLoggedIn,*/ async (req, res, next) => {
   
       if (!params.addrLat) {
         const err = new Error('Not allowed null (address Lat)');
-        res.status(500).json({ err: err.toString() });
+        res.status(500).json({ err: err.toFolat() });
       }
   
       if (!params.addrLng) {
         const err = new Error('Not allowed null (address Lng)');
-        res.status(500).json({ err: err.toString() });
+        res.status(500).json({ err: err.toFolat() });
       }
   
   
@@ -177,5 +176,5 @@ router.delete('/force/:id', /*isLoggedIn,*/ async (req, res) => {
     res.status(500).json({ err: err.toString() });
   }
 });
-
+  
 module.exports = router;
