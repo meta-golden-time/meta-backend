@@ -1,16 +1,17 @@
 const userDao = require('../dao/userDao');
 const bookDao = require('../dao/bookDao');
+const boardDao = require('../dao/boardDao');
 const hashUtil = require('../lib/hashUtil');
 const tokenUtil = require('../lib/tokenUtil');
 
-const userService = {
+const boardService = {
   async reg(params) {
     console.log("🚀 ~ reg ~ params:", params)
     let inserted = null;
     let hashPassword = null;
     
     try {
-      inserted = await userDao.insert(params);
+      inserted = await boardDao.insert(params);
     } catch (err) {
       return new Promise((resolve, reject) => {
         reject(err);
@@ -27,7 +28,7 @@ const userService = {
     let inserted = null;
     
     try {
-      inserted = await userDao.insert(params);
+      inserted = await bookDao.insert(params);
       console.log("🚀 ~ bookAdd ~ inserted:", inserted)
     } catch (err) {
       return new Promise((resolve, reject) => {
@@ -46,7 +47,7 @@ const userService = {
     let result = null;
 
     try {
-      result = await userDao.selectList(params);
+      result = await boardDao.selectList(params);
     } catch (err) {
       return new Promise((resolve, reject) => {
         reject(err);
@@ -62,7 +63,7 @@ const userService = {
     let result = null;
 
     try {
-      result = await userDao.selectInfo(params);
+      result = await boardDao.selectInfo(params);
     } catch (err) {
       return new Promise((resolve, reject) => {
         reject(err);
@@ -78,7 +79,7 @@ const userService = {
     let result = null;
 
     try {
-      result = await userDao.update(params);
+      result = await boardDao.update(params);
     } catch (err) {
       return new Promise((resolve, reject) => {
         reject(err);
@@ -94,7 +95,7 @@ const userService = {
     let result = null;
 
     try {
-      result = await userDao.delete(params);
+      result = await boardDao.delete(params);
     } catch (err) {
       return new Promise((resolve, reject) => {
         reject(err);
@@ -109,7 +110,7 @@ const userService = {
     let result = null;
 
     try {
-      result = await userDao.deleteForce(params);
+      result = await boardDao.deleteForce(params);
     } catch (err) {
       return new Promise((resolve, reject) => {
         reject(err);
@@ -125,7 +126,7 @@ const userService = {
     let selectedUserInfo = null;
     try {
       // 1. 사용자 조회 (로그인용)
-      selectedUserInfo = await userDao.selectUser(params);
+      selectedUserInfo = await boardDao.selectUser(params);
       console.log('selectedUserInfoselectedUserInfo', selectedUserInfo);
       // 1-1. 사용자 조회된게 있는지 확인후 없으면 에러처리 및 함수 종료
       if (!selectedUserInfo) {
@@ -148,4 +149,4 @@ const userService = {
   },
 };
 
-module.exports = userService;
+module.exports = boardService;

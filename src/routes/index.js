@@ -7,7 +7,7 @@ const weatherRouter = require('./weather');
 const mapsRouter = require('./maps');
 const booksRouter = require('./bookmark');
 const naverNewsRouter = require('./naverNews');
-const boardRouter = require('./boardRouter');
+const boardRou = require('./boardRouter');
 
 
 router.use('/users', userRouter);
@@ -16,7 +16,7 @@ router.use('/weather', weatherRouter);
 router.use('/map', mapsRouter);
 router.use('/bookmark', booksRouter);
 router.use('/news', naverNewsRouter);
-router.use('/board', boardRouter);
+router.use('/board', boardRou);
 
 
 /* GET home page. */

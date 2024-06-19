@@ -15,7 +15,6 @@ module.exports = class Board extends Sequelize.Model {
       },
       userID: {
         type: Sequelize.STRING(255),
-        unique: true,
         allowNull: false,
       },
       password: {
@@ -24,18 +23,14 @@ module.exports = class Board extends Sequelize.Model {
       },
       title: {
         type: Sequelize.STRING(255),
-        allowNull: false,
-        unique: true,
-        validate: {
-          isEmail: true
-        }
+        allowNull: false,              
       },
       content: {
         type: Sequelize.STRING(255),
         allowNull: false,
       },
-      role: {
-        type: Sequelize.STRING(255),
+      isPrivate: {
+        type: Sequelize.BOOLEAN,
         allowNull: false,
       },
     }, {

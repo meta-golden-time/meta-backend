@@ -1,30 +1,42 @@
 const express = require('express');
-const { v4: uuidv4 } = require('uuid');
-
 const router = express.Router();
+const boardService = require('../service/boardService');
+const { authMiddleware } = require('../middlewares/user/Login');
 
 let posts = [];
 
 // Create a new post
-router.post('/insert', (req, res) => {
-  const { title, content, author, password, isPrivate } = req.body;
-  const newPost = {
-    userID: req.user.id,
+router.post('/insert', authMiddleware, async (req, res, next) => {
+  const user = req.session.user;    
+  
+  if (!user) {
+    return res.status(401).json({ err: 'Unauthorized user' });
+  }
+  const { title, content, password, isPrivate } = req.body;
+  const params = {
+    userID: user.userID,
+    name: user.name,
     title,
     content,
-    author,
     password: isPrivate ? password : '',
     isPrivate,
-    createdAt: new Date().toISOString(),
-    updatedAt: new Date().toISOString()
   };
-  posts.push(newPost);
-  res.status(201).json(newPost);
+  const result = await boardService.reg(params);
+  console.log("🚀 ~ result:", result)
+  res.status(200).send({ success: true, result });
 });
 
 // Get all posts
-router.get('/all', (req, res) => {
-  res.status(200).json(posts);
+router.get('/all', authMiddleware, async(req, res) => {
+  const user = req.session.user;    
+  
+  if (!user) {
+    return res.status(401).json({ err: 'Unauthorized user' });
+  }
+  console.log("board get/all 입장입니다.")
+  const result = await boardService.allFind();
+  console.log("🚀 ~ result:", {result, userID:user.userID})
+  res.status(200).json({result, userID:user.userID});
 });
 
 // Get a specific post by ID
@@ -38,20 +50,39 @@ router.get('/posts/:id', (req, res) => {
 });
 
 // Update a post
-router.put('/posts/:id', (req, res) => {
-  const { id } = req.params;
-  const { title, content, author, password, isPrivate } = req.body;
-  const post = posts.find(p => p.id === id);
-  if (!post) {
-    return res.status(404).json({ error: 'Post not found' });
+router.put('/posts/:id',  authMiddleware, async(req, res) => {
+  
+  //const post = posts.find(p => p.id === id);
+  // if (!post) {
+  //   return res.status(404).json({ error: 'Post not found' });
+  // }
+  const user = req.session.user;    
+  
+  if (!user) {
+    return res.status(401).json({ err: 'Unauthorized user' });
   }
-  post.title = title;
-  post.content = content;
-  post.author = author;
-  post.password = isPrivate ? password : '';
-  post.isPrivate = isPrivate;
-  post.updatedAt = new Date().toISOString();
-  res.status(200).json(post);
+
+  const { id } = req.params;
+  const { title, content, password, isPrivate } = req.body;
+  const params = {
+    id,
+    userID: user.userID,
+    name: user.name,
+    title,
+    content,
+    password: isPrivate ? password : '',
+    isPrivate,
+  };
+  console.log("🚀 ~ router.put ~ params:", params)
+  try{
+    const result = await boardService.updatePost(params);
+    console.log("🚀 ~ router.put ~ result:", result)
+
+    res.status(200).json(result);
+  }catch(err){
+    res.status(400).json(err.message);
+  }
+  
 });
 
 // Delete a post
