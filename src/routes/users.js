@@ -12,7 +12,7 @@ router.post('/register', /*isLoggedIn,*/ async (req, res, next) => {
     password: req.body.password,
     email: req.body.email,
     phone: req.body.phone,
-    role:  req.body.role,
+    role:  "user",
     // addrLat: req.body.addrLat,
     // addrLng: req.body.addrLng,
     addrLat: 12,
@@ -69,9 +69,11 @@ router.post('/register', /*isLoggedIn,*/ async (req, res, next) => {
   
   
       const result = await userService.reg(params);
-      res.status(200).send({ success: true });
+      console.log("🚀 ~ result:", result)
+      res.status(200).send({ success: true, result });
      //res.status(200).json(result);
     } catch (err) {
+      console.log("🚀 ~ err:", err)
       res.status(500).json({ err: err.toString() });
     }
     /////
@@ -174,5 +176,5 @@ router.delete('/force/:id', /*isLoggedIn,*/ async (req, res) => {
     res.status(500).json({ err: err.toString() });
   }
 });
-
+  
 module.exports = router;

@@ -7,9 +7,7 @@ const tokenUtil = require('../lib/tokenUtil');
 const boardService = {
   async reg(params) {
     console.log("🚀 ~ reg ~ params:", params)
-    let inserted = null;
-    let hashPassword = null;
-    
+    let inserted = null;    
     try {
       inserted = await boardDao.insert(params);
     } catch (err) {
@@ -22,6 +20,58 @@ const boardService = {
       resolve(inserted);
     });
   },
+
+
+  async allFind() {
+    console.log("🚀 ~ reg ~ allFindparams:")
+    let inserted = null;    
+    try {
+      inserted = await boardDao.fineAll();
+    } catch (err) {
+      return new Promise((resolve, reject) => {
+        reject(err);
+      });
+    }
+
+    return new Promise((resolve, reject) => {
+      resolve(inserted);
+    });
+  },
+
+  async updatePost(params) {
+    console.log("🚀 ~ reg ~ allFindparams:")
+    let inserted = null;    
+    try {
+      inserted = await boardDao.editUpdate(params);
+    } catch (err) {
+      return new Promise((resolve, reject) => {
+        reject(err);
+      });
+    }
+
+    return new Promise((resolve, reject) => {
+      resolve(inserted);
+    });
+  },
+
+  async bookAdd(params) {
+    console.log("🚀 ~ reg ~ params:", params)
+    let inserted = null;
+    
+    try {
+      inserted = await bookDao.insert(params);
+      console.log("🚀 ~ bookAdd ~ inserted:", inserted)
+    } catch (err) {
+      return new Promise((resolve, reject) => {
+        reject(err);
+      });
+    }
+
+    return new Promise((resolve, reject) => {
+      resolve(inserted);
+    });
+  },
+
 
 
   // selectList
