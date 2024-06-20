@@ -17,7 +17,7 @@ router.post('/login', async (req, res, next) => {
     const user = await userService.login(body);
 
     if (user) {
-      req.session.user = { userID:user.userID , name: user.name, email: user.email, role: user.role };
+      req.session.user = user;
       req.session.isLogin = true;
       res.status(200).json({ user, success: true });
     } else {

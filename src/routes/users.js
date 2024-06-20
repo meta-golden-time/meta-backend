@@ -13,6 +13,7 @@ router.post('/register', /*isLoggedIn,*/ async (req, res, next) => {
     email: req.body.email,
     phone: req.body.phone,
     role:  "user",
+    address: req.body.address,
     // addrLat: req.body.addrLat,
     // addrLng: req.body.addrLng,
     addrLat: 12,

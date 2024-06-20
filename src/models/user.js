@@ -37,6 +37,10 @@ module.exports = class User extends Sequelize.Model {
         type: Sequelize.STRING(255),
         allowNull: false,
       },
+      address: {
+        type: Sequelize.STRING(1000),
+        allowNull: false,
+      },
       addrLat: { // 사용자 주소의 위도
         type: Sequelize.FLOAT(20),
         allowNull: false,
