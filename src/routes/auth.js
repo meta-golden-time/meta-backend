@@ -28,6 +28,29 @@ router.post('/login', async (req, res, next) => {
   }
 });
 
+router.post('/idCheck', async (req, res, next) => {
+  try {
+    const { userID} = req.body;
+    const body = {
+      userID
+    };  
+
+    if (!userID) {
+      return res.status(400).json({ error: 'Both userID are required' });
+    } 
+    const user = await userService.idCheck(body);
+    console.log("🚀 ~ router.post ~ user:", user)
+    if(user == null){
+      res.status(200).json({ success: true, message:"중복된 아이디가 없습니다." });
+      return
+    }
+    res.status(200).json({ success: false, message:"중복된 아이디가 있습니다." });
+    
+  } catch (err) {
+    res.status(500).json({ success: true, error: err.message });
+  }
+});
+
 // 세션 체크 엔드포인트
 router.get('/loginCheck', (req, res) => {
   if (req.session.isLogin) {

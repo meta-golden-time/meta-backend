@@ -38,7 +38,7 @@ router.get('/all', authMiddleware, async(req, res) => {
     return res.status(401).json({ err: 'Unauthorized user' });
   }  
   const result = await boardService.allFind(); 
-  res.status(200).json({result, userID:user.userID});
+  res.status(200).json({result, user});
 });
 
 // Get a specific post by ID

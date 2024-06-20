@@ -104,14 +104,30 @@ const userDao = {
     });
   },
   // 로그인용 유저 정보 조회
-  selectUser(params) {
+  loginUser(params) {
    
     return new Promise((resolve, reject) => {
       User.findOne({
 
         //attributes: ['id', 'user_i_d', 'password', 'name'],
-        where: [{ user_i_d: params.userID }],
+        where: [{ user_i_d: params.userID, password: params.password }],
 
+      }).then((selectedInfo) => {
+       
+        resolve(selectedInfo);
+      }).catch((err) => {
+      
+        reject(err);
+      });
+    });
+  },
+
+  selectUser(params) {
+   
+    return new Promise((resolve, reject) => {
+      User.findOne({
+        //attributes: ['id', 'user_i_d', 'password', 'name'],
+        where: [{ user_i_d: params.userID }],
       }).then((selectedInfo) => {
        
         resolve(selectedInfo);
