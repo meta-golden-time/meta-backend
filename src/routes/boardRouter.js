@@ -20,10 +20,10 @@ router.post('/insert', authMiddleware, async (req, res, next) => {
     name: user.name,
     title,
     content,
-    password: isPrivate ? password : '',
-
+    password,
     isPrivate,
   };
+  console.log("🚀 ~ router.post ~ params:", params)
   const result = await boardService.reg(params);
   console.log("🚀 ~ result:", result)
   res.status(200).send({ success: true, result });
@@ -36,10 +36,8 @@ router.get('/all', authMiddleware, async(req, res) => {
   
   if (!user) {
     return res.status(401).json({ err: 'Unauthorized user' });
-  }
-  console.log("board get/all 입장입니다.")
-  const result = await boardService.allFind();
-  console.log("🚀 ~ result:", {result, userID:user.userID})
+  }  
+  const result = await boardService.allFind(); 
   res.status(200).json({result, userID:user.userID});
 });
 
@@ -74,7 +72,7 @@ router.put('/posts/:id',  authMiddleware, async(req, res) => {
     name: user.name,
     title,
     content,
-    password: isPrivate ? password : '',
+    password,
     isPrivate,
   };
   console.log("🚀 ~ router.put ~ params:", params)
@@ -90,19 +88,28 @@ router.put('/posts/:id',  authMiddleware, async(req, res) => {
 });
 
 // Delete a post
-router.delete('/posts/:id', (req, res) => {
+router.delete('/posts/:id', authMiddleware, async(req, res) => {
+  const user = req.session.user;    
+  
+  if (!user) {
+    return res.status(401).json({ err: 'Unauthorized user' });
+  }  
   const { id } = req.params;
   const { password } = req.body;
-  const postIndex = posts.findIndex(p => p.id === id);
-  if (postIndex === -1) {
-    return res.status(404).json({ error: 'Post not found' });
-  }
-  const post = posts[postIndex];
-  if (post.isPrivate && post.password !== password) {
-    return res.status(403).json({ error: 'Incorrect password' });
-  }
-  posts.splice(postIndex, 1);
-  res.status(200).json({ message: 'Post deleted successfully' });
+  const params = {
+    id,
+    userID: user.userID,
+    name: user.name,   
+    password,   
+  };
+
+  try{
+    const result = await boardService.deletePost(params);
+    console.log("🚀 ~ router.put ~ result:", result)
+    res.status(200).json(result);
+  }catch(err){
+    res.status(400).json(err.message);
+  }  
 });
 
 module.exports = router;
