@@ -53,7 +53,9 @@ router.post('/idCheck', async (req, res, next) => {
 
 // 세션 체크 엔드포인트
 router.get('/loginCheck', (req, res) => {
-  if (req.session.isLogin) {
+
+  console.log("sdfasdf",req.session.isLogin)
+  if (req.session.isLogin == true) {
     res.json({ success: true, user: req.session.user });
   } else {
     res.json({ success: false });
