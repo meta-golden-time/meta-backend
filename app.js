@@ -19,8 +19,7 @@ dotenv.config();
 
 // CORS 설정
 const corsOptions = {
-  origin: 'http://localhost:5173', // 요청을 허용할 출처
-  //origin: 'http://localhost:5174', // 요청을 허용할 출처
+  origin: ['http://localhost:5173', 'http://localhost:5174'], // 요청을 허용할 출처 배열로 지정
   credentials: true, // 자격 증명을 허용
 };
 
