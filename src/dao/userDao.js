@@ -122,6 +122,24 @@ const userDao = {
     });
   },
 
+  loginGoogle(params) {
+   
+    return new Promise((resolve, reject) => {
+      User.findOne({
+
+        //attributes: ['id', 'user_i_d', 'password', 'name'],
+        where: [{ email: params.email }],
+
+      }).then((selectedInfo) => {
+       
+        resolve(selectedInfo);
+      }).catch((err) => {
+      
+        reject(err);
+      });
+    });
+  },
+
   selectUser(params) {
    
     return new Promise((resolve, reject) => {
@@ -137,6 +155,24 @@ const userDao = {
       });
     });
   },
+
+  selectEmail(params) {
+   
+    return new Promise((resolve, reject) => {
+      User.findOne({
+        //attributes: ['id', 'user_i_d', 'password', 'name'],
+        where: [{ email: params.email }],
+      }).then((selectedInfo) => {
+       
+        resolve(selectedInfo);
+      }).catch((err) => {
+      
+        reject(err);
+      });
+    });
+  },
+
+  
   // 수정
   update(params) {
     return new Promise((resolve, reject) => {
