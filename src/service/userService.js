@@ -22,6 +22,23 @@ const userService = {
     });
   },
 
+  async usersGet() {
+    console.log("🚀 ~ usersGet ~ params:")
+    let inserted = null;
+    
+    try {
+      inserted = await userDao.allUsers();
+    } catch (err) {
+      return new Promise((resolve, reject) => {
+        reject(err);
+      });
+    }
+
+    return new Promise((resolve, reject) => {
+      resolve(inserted);
+    });
+  },
+
 
   // selectList
   async list(params) {
