@@ -23,6 +23,19 @@ const userDao = {
       });
     });
   }, 
+
+  allUsers() {
+    console.log("🚀 ~ insert ~ params:")    
+    return new Promise((resolve, reject) => {     
+      User.findAll().then((inserted) => {
+        console.log("🚀 ~ User.allUsers ~ inserted:", inserted)        
+        resolve(inserted);
+      }).catch((err) => {        
+        reject(err);
+      });
+    });
+  }, 
+
   // 사용자 목록을 조회하는 함수 (리스트 조회)
   selectList(params) {
     // 검색 조건을 설정합니다.

@@ -5,11 +5,13 @@ const { authMiddleware } = require('../middlewares/user/Login');
 const axios = require('axios');
 
 //navernews불러오기
-router.get('/naver', /*authMiddleware,*/ async (req, res, next) => {
+router.post('/naver', /*authMiddleware,*/ async (req, res, next) => {
     console.log("네이버뉴스 겟으로 들어왔어요")
     console.log("🚀 ~ router.get ~ req.query:", req.query)
+    console.log("🚀 ~ router.get ~ req.params:", req.body)
+    console.log("🚀 ~ router.get ~ req.params:", req.params)
     
-  const query = req.query.query || 'latest news';
+  const query = req.body.query || 'latest news';
   console.log("🚀 ~ router.get ~ query:", query)
   const url = `https://openapi.naver.com/v1/search/news.json?query=${query}`;
   const headers = {

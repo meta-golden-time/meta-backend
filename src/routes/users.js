@@ -2,17 +2,17 @@ const express = require('express');
 
 const router = express.Router();
 const userService = require('../service/userService');
-//const { isLoggedIn } = require('../lib/middleware');
+const { authMiddleware } = require('../middlewares/user/Login');
 
 // 회원가입
-router.post('/register', /*isLoggedIn,*/ async (req, res, next) => {
+router.post('/register', async (req, res, next) => {
   const params = {
     name: req.body.name,
     userID: req.body.userID,
     password: req.body.password,
     email: req.body.email,
     phone: req.body.phone,
-    role:  "user",
+    role:  "admin",
     address: req.body.address,
     // addrLat: req.body.addrLat,
     // addrLng: req.body.addrLng,
@@ -89,6 +89,91 @@ router.post('/register', /*isLoggedIn,*/ async (req, res, next) => {
   
 });
 
+// 모든정보조회
+router.get('/allUser', authMiddleware, async (req, res) => {
+  const user = req.session.user;      
+  if (!user) {
+    return res.status(401).json({ err: 'Unauthorized user' });
+  }
+  try {
+    if (user.role != "admin") {
+      return res.status(401).json({ err: '권한이 없습니다.' });
+    }
+
+    const result = await userService.usersGet();
+    console.log("🚀 ~ router.get ~ result:", result)
+
+    // 최종 응답
+    res.status(200).json(result);
+  } catch (err) {
+    res.status(500).json({ err: err.toString() });
+  }
+});
+
+// 수정
+router.put('/update/:id', authMiddleware, async (req, res) => {
+  const user = req.session.user;      
+  if (!user) {
+    return res.status(401).json({ err: 'Unauthorized user' });
+  }
+  if(user.role != 'admin') {
+    return res.status(401).json({ err: '권한이 없습니다.' });
+  }
+  
+  console.log("🚀 ~ router.put ~ params.req.params:", req.params)
+  try {
+    const params = {
+      id: req.params.id,
+      name: req.body.name,
+      password: req.body.password,
+      phone: req.body.phone,
+    };
+
+    const result = await userService.edit(params);
+    console.log("🚀 ~ router.put ~ result:", result)
+
+    // 최종 응답
+    res.status(200).json(result);
+  } catch (err) {
+    res.status(500).json({ err: err.toString() });
+  }
+});
+
+// 완전삭제
+router.delete('/deleteForce/:id', authMiddleware, async (req, res) => {
+  try {
+    const params = {
+      id: req.params.id,
+    };
+
+    const result = await userService.deleteForce(params);
+
+    // 최종 응답
+    res.status(200).json(result);
+  } catch (err) {
+    res.status(500).json({ err: err.toString() });
+  }
+});
+
+// 삭제
+router.delete('/:id', authMiddleware, async (req, res) => {
+  try {
+    const params = {
+      id: req.params.id,
+    };
+
+    const result = await userService.delete(params);
+
+    // 최종 응답
+    res.status(200).json(result);
+  } catch (err) {
+    res.status(500).json({ err: err.toString() });
+  }
+});
+
+
+
+
 // 리스트 조회
 router.get('/', /*isLoggedIn,*/ async (req, res) => {
   try {
@@ -127,55 +212,6 @@ router.get('/:id', /*isLoggedIn,*/ async (req, res) => {
   }
 });
 
-// 수정
-router.put('/:id', /*isLoggedIn,*/ async (req, res) => {
-  try {
-    const params = {
-      id: req.params.id,
-      departmentId: req.body.departmentId,
-      name: req.body.name,
-      email: req.body.email,
-      phone: req.body.phone,
-    };
 
-    const result = await userService.edit(params);
-
-    // 최종 응답
-    res.status(200).json(result);
-  } catch (err) {
-    res.status(500).json({ err: err.toString() });
-  }
-});
-
-// 삭제
-router.delete('/:id', /*isLoggedIn,*/ async (req, res) => {
-  try {
-    const params = {
-      id: req.params.id,
-    };
-
-    const result = await userService.delete(params);
-
-    // 최종 응답
-    res.status(200).json(result);
-  } catch (err) {
-    res.status(500).json({ err: err.toString() });
-  }
-});
-// 삭제
-router.delete('/force/:id', /*isLoggedIn,*/ async (req, res) => {
-  try {
-    const params = {
-      id: req.params.id,
-    };
-
-    const result = await userService.deleteForce(params);
-
-    // 최종 응답
-    res.status(200).json(result);
-  } catch (err) {
-    res.status(500).json({ err: err.toString() });
-  }
-});
   
 module.exports = router;
